@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_it_resource_assignment_tree" model="ir.ui.view">
+        <field name="name">it.resource.assignment.tree</field>
+        <field name="model">it.resource.assignment</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="returned == True" decoration-success="returned == False">
+                <field name="date"/>
+                <field name="item_id"/>
+                <field name="user_id"/>
+                <field name="quantity"/>
+                <field name="unit_id"/>
+                <field name="returned"/>
+                <field name="return_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_it_resource_assignment_form" model="ir.ui.view">
+        <field name="name">it.resource.assignment.form</field>
+        <field name="model">it.resource.assignment</field>
+        <field name="arch" type="xml">
+            <form class="o_it_assignment_form">
+                <header>
+                    <button name="action_return" type="object" string="Register return" class="oe_highlight" icon="fa-undo"
+                            attrs="{'invisible': [('returned', '=', True)]}"
+                            groups="it_resource_request.group_it_resource_manager"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Returned" bg_color="bg-success" attrs="{'invisible': [('returned', '=', False)]}"/>
+                    <div class="o_it_callout">
+                        <p>This record is created when the manager fulfills a line. The return gives the quantity back to the item or frees the unit for another request.</p>
+                    </div>
+                    <group>
+                        <group string="What was delivered">
+                            <field name="item_id"/>
+                            <field name="unit_id"/>
+                            <field name="quantity"/>
+                            <field name="line_id"/>
+                        </group>
+                        <group string="To whom and when">
+                            <field name="user_id"/>
+                            <field name="date"/>
+                            <field name="returned"/>
+                            <field name="return_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_it_resource_assignment_search" model="ir.ui.view">
+        <field name="name">it.resource.assignment.search</field>
+        <field name="model">it.resource.assignment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="item_id"/>
+                <field name="user_id"/>
+                <field name="unit_id"/>
+                <filter name="filter_open" string="Still in use" domain="[('returned', '=', False)]"/>
+                <filter name="filter_returned" string="Returned" domain="[('returned', '=', True)]"/>
+                <group expand="0" string="Group by">
+                    <filter name="group_user" string="Person" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_item" string="Item" context="{'group_by': 'item_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_it_resource_assignment" model="ir.actions.act_window">
+        <field name="name">In use</field>
+        <field name="res_model">it.resource.assignment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_filter_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nobody holds a resource right now</p>
+            <p>Each fulfillment creates a line here. The return gives the quantity back or frees the unit.</p>
+        </field>
+    </record>
+
+    <record id="action_it_resource_assignment_returned" model="ir.actions.act_window">
+        <field name="name">Returned</field>
+        <field name="res_model">it.resource.assignment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('returned', '=', True)]</field>
+    </record>
+</odoo>

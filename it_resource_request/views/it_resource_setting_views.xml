@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_it_resource_approval_template_tree" model="ir.ui.view">
+        <field name="name">it.resource.approval.template.tree</field>
+        <field name="model">it.resource.approval.template</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="body_format"/>
+                <field name="email_to"/>
+                <field name="in_use"/>
+                <button name="action_send_test" type="object" string="Send test" icon="fa-paper-plane"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_it_resource_setting_form" model="ir.ui.view">
+        <field name="name">it.resource.setting.form</field>
+        <field name="model">it.resource.setting</field>
+        <field name="arch" type="xml">
+            <form class="o_it_setting_form" create="false" delete="false">
+                <header>
+                    <button name="action_new_template" type="object" string="New template" class="oe_highlight" icon="fa-plus"/>
+                </header>
+                <sheet>
+                    <div class="o_it_callout">
+                        <h3>Approval templates</h3>
+                        <p>Approval 1 is decided by IT and Approval 2 by the board, inside the system. If a template is in use, its text is also emailed to the members of the group.</p>
+                        <p>Third parties receive the template in use at the given address. A reply with the approval or refusal word (APROVADO or RECUSADO by default), each word alone on a line, closes the step. Sending uses the default account of the Email inbox.</p>
+                    </div>
+                    <field name="template_ids" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_it_resource_setting" model="ir.actions.server">
+        <field name="name">Approval templates</field>
+        <field name="model_id" ref="model_it_resource_setting"/>
+        <field name="state">code</field>
+        <field name="code">action = model.get_setting().action_open()</field>
+    </record>
+</odoo>

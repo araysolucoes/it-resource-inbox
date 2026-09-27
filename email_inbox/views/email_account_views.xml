@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_email_account_kanban" model="ir.ui.view">
+        <field name="name">email.account.kanban</field>
+        <field name="model">email.account</field>
+        <field name="arch" type="xml">
+            <kanban class="o_email_account_kanban">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="smtp_host"/>
+                <field name="pop3_host"/>
+                <field name="active"/>
+                <field name="message_count"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click o_email_account_card #{!record.active.raw_value and 'o_email_account_card_off' or ''}">
+                            <div class="o_email_account_card_top">
+                                <strong><field name="name"/></strong>
+                                <span class="o_email_account_count"><field name="message_count"/> msgs</span>
+                            </div>
+                            <div class="o_email_account_address"><field name="email"/></div>
+                            <div class="o_email_account_status">
+                                <span t-if="record.smtp_host.raw_value" class="badge badge-pill o_email_pill_ok">Sending ready</span>
+                                <span t-else="" class="badge badge-pill o_email_pill_wait">Sending has no server</span>
+                                <span t-if="record.pop3_host.raw_value" class="badge badge-pill o_email_pill_ok">Receiving ready</span>
+                                <span t-else="" class="badge badge-pill o_email_pill_wait">Receiving has no server</span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_email_account_tree" model="ir.ui.view">
+        <field name="name">email.account.tree</field>
+        <field name="model">email.account</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="active == False">
+                <field name="email"/>
+                <field name="provider"/>
+                <field name="smtp_enabled"/>
+                <field name="pop_enabled"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_email_account_form" model="ir.ui.view">
+        <field name="name">email.account.form</field>
+        <field name="model">email.account</field>
+        <field name="arch" type="xml">
+            <form class="o_email_account_form">
+                <header>
+                    <button name="action_fetch"
+                            type="object"
+                            string="Fetch Messages Now"
+                            class="oe_highlight"
+                            icon="fa-download"
+                            groups="email_inbox.group_email_manager"/>
+                    <button name="action_test_smtp"
+                            type="object"
+                            string="Test Login"
+                            icon="fa-plug"
+                            groups="email_inbox.group_email_manager"/>
+                    <button name="action_send_test"
+                            type="object"
+                            string="Send Test Email"
+                            icon="fa-paper-plane"
+                            groups="email_inbox.group_email_manager"/>
+                    <button name="action_test_pop3"
+                            type="object"
+                            string="Test Receiving"
+                            icon="fa-inbox"
+                            groups="email_inbox.group_email_manager"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_open_messages" icon="fa-envelope-o">
+                            <field name="message_count" widget="statinfo" string="Messages"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="action_open_errors" icon="fa-exclamation-triangle">
+                            <field name="error_count" widget="statinfo" string="Failures"/>
+                        </button>
+                    </div>
+                    <div class="o_email_setup_callout" attrs="{'invisible': [('provider', '!=', 'gmail')]}">
+                        <h3>Gmail app password</h3>
+                        <p>
+                            Gmail does not accept the regular account password.
+                            Generate an app password and paste it into the Password field.
+                            <a href="https://www.youtube.com/watch?v=Lz6fJChKRtA" target="_blank">See how to generate an app password</a>.
+                        </p>
+                    </div>
+                    <group>
+                        <group string="Setup">
+                            <field name="provider"/>
+                            <field name="email" placeholder="inbox@yourcompany.com"/>
+                            <field name="smtp_password" password="True" string="Password" groups="email_inbox.group_email_manager"/>
+                            <field name="name" invisible="1"/>
+                        </group>
+                        <group string="After Setup">
+                            <field name="smtp_enabled"/>
+                            <field name="pop_enabled"/>
+                            <field name="only_replies"/>
+                            <field name="keep_others" attrs="{'invisible': [('only_replies', '=', False)]}"/>
+                            <field name="active"/>
+                            <field name="code" placeholder="support"/>
+                            <field name="is_default"/>
+                        </group>
+                    </group>
+                    <separator string="Signature Banner"/>
+                    <p class="text-muted">png, jpg or webp. Added at the end of every message sent.</p>
+                    <field name="signature_image" widget="image" filename="signature_filename"/>
+                    <field name="signature_filename" invisible="1"/>
+                    <group attrs="{'invisible': [('last_fetch_error', '=', False)]}">
+                        <field name="last_fetch"/>
+                        <field name="last_fetch_error"/>
+                    </group>
+                    <group string="Odoo Servers">
+                        <field name="mail_server_id"/>
+                        <field name="fetchmail_server_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_email_account_search" model="ir.ui.view">
+        <field name="name">email.account.search</field>
+        <field name="model">email.account</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="email"/>
+                <filter name="filter_active" string="In Use" domain="[('active', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_email_account" model="ir.actions.act_window">
+        <field name="name">Email Accounts</field>
+        <field name="res_model">email.account</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Set up your first email</p>
+            <p>
+                Enter the provider, the email, the password and the banner.
+                The server is filled in automatically. Then turn on SMTP and POP.
+            </p>
+        </field>
+    </record>
+</odoo>

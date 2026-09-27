@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_it_resource_root"
+              name="IT resources"
+              sequence="50"
+              groups="it_resource_request.group_it_tab_request,it_resource_request.group_it_tab_catalog,it_resource_request.group_it_tab_use,it_resource_request.group_it_tab_config,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_cat_request"
+              name="Requests"
+              parent="menu_it_resource_root"
+              sequence="10"
+              groups="it_resource_request.group_it_tab_request,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_request"
+              name="Requests"
+              parent="menu_it_resource_cat_request"
+              action="action_it_resource_request"
+              sequence="5"
+              groups="it_resource_request.group_it_tab_request,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_request_draft"
+              name="Requesting"
+              parent="menu_it_resource_cat_request"
+              action="action_it_resource_request_draft"
+              sequence="10"
+              groups="it_resource_request.group_it_tab_request,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_request_open"
+              name="Waiting for approval"
+              parent="menu_it_resource_cat_request"
+              action="action_it_resource_request_open"
+              sequence="20"
+              groups="it_resource_request.group_it_tab_request,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_request_progress"
+              name="With IT"
+              parent="menu_it_resource_cat_request"
+              action="action_it_resource_request_progress"
+              sequence="30"
+              groups="it_resource_request.group_it_tab_request,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_request_sign"
+              name="Waiting for signature"
+              parent="menu_it_resource_cat_request"
+              action="action_it_resource_request_sign"
+              sequence="40"
+              groups="it_resource_request.group_it_tab_request,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_request_done"
+              name="In use"
+              parent="menu_it_resource_cat_request"
+              action="action_it_resource_request_done"
+              sequence="50"
+              groups="it_resource_request.group_it_tab_request,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_request_mine"
+              name="My requests"
+              parent="menu_it_resource_cat_request"
+              action="action_it_resource_request_mine"
+              sequence="60"
+              groups="it_resource_request.group_it_tab_request,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_request_cancel"
+              name="Closed"
+              parent="menu_it_resource_cat_request"
+              action="action_it_resource_request_cancel"
+              sequence="70"
+              groups="it_resource_request.group_it_tab_request,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_cat_catalog"
+              name="Catalog"
+              parent="menu_it_resource_root"
+              sequence="20"
+              groups="it_resource_request.group_it_tab_catalog,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_need"
+              name="Needs"
+              parent="menu_it_resource_cat_catalog"
+              action="action_it_resource_need"
+              sequence="10"/>
+
+    <menuitem id="menu_it_resource_item"
+              name="Items"
+              parent="menu_it_resource_cat_catalog"
+              action="action_it_resource_item"
+              sequence="20"/>
+
+    <menuitem id="menu_it_resource_unit"
+              name="Units"
+              parent="menu_it_resource_cat_catalog"
+              action="action_it_resource_unit"
+              sequence="30"/>
+
+    <menuitem id="menu_it_resource_cat_use"
+              name="In use"
+              parent="menu_it_resource_root"
+              sequence="30"
+              groups="it_resource_request.group_it_tab_use,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_assignment"
+              name="With someone"
+              parent="menu_it_resource_cat_use"
+              action="action_it_resource_assignment"
+              sequence="10"/>
+
+    <menuitem id="menu_it_resource_assignment_returned"
+              name="Returned"
+              parent="menu_it_resource_cat_use"
+              action="action_it_resource_assignment_returned"
+              sequence="20"/>
+
+    <menuitem id="menu_it_resource_cat_config"
+              name="Settings"
+              parent="menu_it_resource_root"
+              sequence="40"
+              groups="it_resource_request.group_it_tab_config,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_access"
+              name="Access"
+              parent="menu_it_resource_cat_config"
+              action="action_it_resource_access"
+              sequence="5"
+              groups="it_resource_request.group_it_tab_config,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_setting"
+              name="Approval templates"
+              parent="menu_it_resource_cat_config"
+              action="action_it_resource_setting"
+              sequence="10"
+              groups="it_resource_request.group_it_tab_config,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_term"
+              name="Signature terms"
+              parent="menu_it_resource_cat_config"
+              action="action_it_resource_term"
+              sequence="20"
+              groups="it_resource_request.group_it_tab_config,it_resource_request.group_it_resource_manager"/>
+
+    <record id="action_it_resource_load_demo" model="ir.actions.server">
+        <field name="name">Demo data</field>
+        <field name="model_id" ref="model_it_resource_setting"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_load_demo()</field>
+    </record>
+
+    <menuitem id="menu_it_resource_need_category"
+              name="Categories"
+              parent="menu_it_resource_cat_config"
+              action="action_it_resource_need_category"
+              sequence="30"
+              groups="it_resource_request.group_it_tab_config,it_resource_request.group_it_resource_manager"/>
+
+    <menuitem id="menu_it_resource_demo"
+              name="Demo data"
+              parent="menu_it_resource_cat_config"
+              action="action_it_resource_load_demo"
+              sequence="40"
+              groups="it_resource_request.group_it_tab_config,it_resource_request.group_it_resource_manager"/>
+</odoo>

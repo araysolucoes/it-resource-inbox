@@ -1,0 +1,270 @@
+// Inbox look and feel: account and message kanban cards, guidance callouts,
+// the message reading layout and the compose dialog. Card border colors
+// follow the message state so drafts, sent, received and failed mail can be
+// told apart at a glance.
+
+.o_email_setup_callout {
+    background: #f7f4f8;
+    border: 1px solid #e4d4e6;
+    border-left: 4px solid #875A7B;
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+
+    h3 {
+        margin: 0 0 8px;
+        font-size: 15px;
+        color: #875A7B;
+    }
+
+    p {
+        margin-bottom: 8px;
+    }
+
+    p:last-child,
+    ol:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.o_email_steps {
+    margin: 0 0 8px;
+    padding-left: 18px;
+}
+
+.o_email_examples {
+    color: #6c6570;
+    font-size: 13px;
+}
+
+.o_email_address .o_field_widget {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.o_email_account_kanban .o_email_account_card {
+    padding: 14px 16px;
+    border-left: 4px solid #875A7B;
+}
+
+.o_email_account_card_off {
+    opacity: 0.55;
+}
+
+.o_email_account_card_top,
+.o_email_card_top,
+.o_email_card_foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.o_email_account_address {
+    margin: 6px 0 10px;
+    color: #4c4450;
+}
+
+.o_email_account_count {
+    color: #8d8292;
+    font-size: 12px;
+}
+
+.o_email_account_status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.o_email_pill_ok {
+    background: #e5f6ec;
+    color: #1e7a45;
+}
+
+.o_email_pill_wait {
+    background: #fff4e5;
+    color: #8a5a12;
+}
+
+.o_email_pill_account {
+    background: #f3eaf4;
+    color: #875A7B;
+}
+
+.o_email_inbox_kanban .o_email_card {
+    padding: 12px 14px;
+    border-left: 4px solid #875A7B;
+}
+
+.o_email_card_received {
+    border-left-color: #2f6f9f;
+}
+
+.o_email_card_sent {
+    border-left-color: #1e7a45;
+}
+
+.o_email_card_error {
+    border-left-color: #a12622;
+}
+
+.o_email_card_draft {
+    border-left-color: #8d8292;
+}
+
+.o_email_card_who {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.o_email_card_date {
+    flex: 0 0 auto;
+    color: #8d8292;
+    font-size: 12px;
+}
+
+.o_email_card_subject {
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+.o_email_card_preview {
+    margin: 4px 0 10px;
+    color: #6c6570;
+    font-size: 12px;
+    line-height: 1.4;
+    max-height: 2.8em;
+    overflow: hidden;
+}
+
+.o_email_state_sent {
+    background: #e5f6ec;
+    color: #1e7a45;
+}
+
+.o_email_state_received {
+    background: #e7f2f8;
+    color: #1d5678;
+}
+
+.o_email_state_error {
+    background: #fdecea;
+    color: #a12622;
+}
+
+.o_email_state_draft {
+    background: #eeeef0;
+    color: #5c5660;
+}
+
+.o_email_compose textarea {
+    min-height: 220px;
+    line-height: 1.5;
+}
+
+.o_email_message_form .o_email_read {
+    max-width: 760px;
+}
+
+.o_email_message_form .o_email_subject {
+    margin: 0 0 14px;
+    font-size: 26px;
+    line-height: 1.25;
+
+    .o_field_widget {
+        font-size: inherit;
+        font-weight: 600;
+    }
+}
+
+.o_email_message_form .o_email_meta {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 8px 12px;
+    align-items: center;
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    background: #f7f4f8;
+    border: 1px solid #e4d4e6;
+    border-radius: 8px;
+}
+
+.o_email_message_form .o_email_meta_row {
+    display: contents;
+
+    > span {
+        color: #8d8292;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+    }
+}
+
+.o_email_message_form .o_email_body .o_field_text,
+.o_email_message_form .o_email_quote .o_field_text {
+    white-space: pre-wrap;
+}
+
+.o_email_message_form .o_email_body {
+    font-size: 15px;
+    line-height: 1.55;
+    color: #2c2830;
+}
+
+.o_email_message_form .o_email_quote {
+    margin-top: 16px;
+    padding: 10px 12px;
+    border-left: 3px solid #e4d4e6;
+    color: #6c6570;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.o_email_message_form .o_email_files {
+    margin-top: 18px;
+}
+
+.o_email_message_form .o_email_files_title {
+    margin-bottom: 6px;
+    color: #875A7B;
+    font-weight: 600;
+}
+
+.o_email_error_banner {
+    margin-bottom: 12px;
+}
+
+.o_email_compose_banner {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    border-radius: 6px;
+    border: 1px solid #e4d4e6;
+    background: #f7f4f8;
+
+    strong {
+        color: #875A7B;
+    }
+
+    span {
+        color: #4c4450;
+    }
+}
+
+.o_email_compose_reply {
+    background: #f4f8fb;
+    border-color: #d5e4ee;
+}
+
+.o_email_preview {
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    border: 1px solid #e4d4e6;
+    border-radius: 8px;
+    background: #fff;
+}

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_it_resource_request_kanban" model="ir.ui.view">
+        <field name="name">it.resource.request.kanban</field>
+        <field name="model">it.resource.request</field>
+        <field name="arch" type="xml">
+            <kanban class="o_it_request_kanban" default_order="id desc">
+                <field name="name"/>
+                <field name="requested_by"/>
+                <field name="collaborator_id"/>
+                <field name="expected_date"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="line_count"/>
+                <field name="note"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click o_it_request_card o_it_request_#{record.state.raw_value} #{record.priority.raw_value == '1' and 'o_it_request_high' or ''}">
+                            <div class="o_it_request_top">
+                                <strong><field name="name"/></strong>
+                                <span t-attf-class="badge badge-pill o_it_state_#{record.state.raw_value}">
+                                    <field name="state"/>
+                                </span>
+                            </div>
+                            <div class="o_it_request_who">
+                                <field name="collaborator_id"/>
+                            </div>
+                            <div class="o_it_request_meta">
+                                <span><field name="line_count"/> needs</span>
+                                <span><field name="expected_date"/></span>
+                            </div>
+                            <div class="o_it_request_note" t-if="record.note.raw_value">
+                                <field name="note"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_it_resource_request_tree" model="ir.ui.view">
+        <field name="name">it.resource.request.tree</field>
+        <field name="model">it.resource.request</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="state in ('cancelado', 'devolvido')" decoration-danger="state == 'nao_aprovado'" decoration-warning="priority == '1'" decoration-success="state == 'em_uso'">
+                <field name="name"/>
+                <field name="requested_by"/>
+                <field name="collaborator_id"/>
+                <field name="expected_date"/>
+                <field name="priority"/>
+                <field name="line_count"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_it_resource_request_form" model="ir.ui.view">
+        <field name="name">it.resource.request.form</field>
+        <field name="model">it.resource.request</field>
+        <field name="arch" type="xml">
+            <form class="o_it_request_form">
+                <header>
+                    <button name="action_submit" type="object" string="Submit request" states="solicitando" class="oe_highlight" icon="fa-paper-plane"/>
+                    <button name="action_request_approval" type="object" string="Ask for approval" states="solicitado" class="oe_highlight" icon="fa-check"/>
+                    <button name="action_open_decide" type="object" string="Approve or refuse" states="aguardando_aprovacao" class="oe_highlight" icon="fa-gavel" groups="it_resource_request.group_it_approval_ti,it_resource_request.group_it_approval_board,it_resource_request.group_it_resource_manager"/>
+                    <button name="action_start" type="object" string="Start" states="aprovado" class="oe_highlight" icon="fa-play" groups="it_resource_request.group_it_resource_manager"/>
+                    <button name="action_to_allocation" type="object" string="Allocate items" states="em_andamento" class="oe_highlight" icon="fa-cubes" groups="it_resource_request.group_it_resource_manager"/>
+                    <button name="action_check_availability" type="object" string="Check availability" states="alocacao,disponibilidade" class="oe_highlight" icon="fa-search" groups="it_resource_request.group_it_resource_manager"/>
+                    <button name="action_deliver" type="object" string="Deliver for signature" states="disponibilidade" class="oe_highlight" icon="fa-truck" groups="it_resource_request.group_it_resource_manager"/>
+                    <button name="action_open_my_signature" type="object" string="Sign term" states="entregue,devolucao" class="oe_highlight" icon="fa-pencil"/>
+                    <button name="action_start_return" type="object" string="Start return" states="em_uso" icon="fa-undo" groups="it_resource_request.group_it_resource_manager"/>
+                    <button name="action_cancel" type="object" string="Cancel" states="solicitando,solicitado,aguardando_aprovacao,aprovado,em_andamento" icon="fa-times"/>
+                    <button name="action_back_to_requesting" type="object" string="Back to requesting" states="solicitado,cancelado,nao_aprovado" icon="fa-reply"/>
+                    <button name="action_open_origin" type="object" string="Open source record" icon="fa-external-link"
+                            attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', 0)]}"/>
+                    <field name="state" widget="statusbar" readonly="1" statusbar_visible="solicitando,solicitado,aguardando_aprovacao,aprovado,em_andamento,alocacao,disponibilidade,entregue,em_uso,devolucao,devolvido"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-flag" disabled="1">
+                            <field name="stage_label" widget="statinfo" string="Stage"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Request number"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Who asks and who receives">
+                            <field name="requested_by"/>
+                            <field name="collaborator_id"/>
+                            <field name="expected_date"/>
+                            <field name="priority"/>
+                        </group>
+                        <group string="Link with another module" attrs="{'invisible': [('res_model', '=', False)]}">
+                            <field name="res_model"/>
+                            <field name="res_id"/>
+                        </group>
+                    </group>
+                    <separator string="Reason"/>
+                    <field name="note" nolabel="1" placeholder="E.g.: the collaborator starts on Monday."/>
+                    <div class="o_it_callout" attrs="{'invisible': [('state', 'not in', ('solicitando', 'solicitado'))]}">
+                        <h3>Next step</h3>
+                        <p attrs="{'invisible': [('state', '!=', 'solicitando')]}">Submit the request. The need stays on this screen until it is submitted.</p>
+                        <p attrs="{'invisible': [('state', '!=', 'solicitado')]}">Ask for approval. If no line requires approval, the request goes to IT.</p>
+                    </div>
+                    <div class="o_it_callout" attrs="{'invisible': [('state', '!=', 'aguardando_aprovacao')]}">
+                        <h3>Next step</h3>
+                        <p>IT and the board decide with the button above. Third parties reply to the email. When all of them accept, the request goes to IT.</p>
+                    </div>
+                    <div class="o_it_callout" attrs="{'invisible': [('state', '!=', 'aprovado')]}">
+                        <h3>Next step</h3>
+                        <p>Start the handling. The item is chosen during allocation, not here on the need.</p>
+                    </div>
+                    <div class="o_it_callout" attrs="{'invisible': [('state', '!=', 'em_andamento')]}">
+                        <h3>Next step</h3>
+                        <p>Open the allocation to choose the item of each line.</p>
+                    </div>
+                    <div class="o_it_callout" attrs="{'invisible': [('state', '!=', 'alocacao')]}">
+                        <h3>Next step</h3>
+                        <p>Choose the item and check the availability.</p>
+                    </div>
+                    <div class="o_it_callout" attrs="{'invisible': [('state', '!=', 'disponibilidade')]}">
+                        <h3>Next step</h3>
+                        <p>Deliver for signature. The collaborator signs and the resource becomes in use.</p>
+                    </div>
+                    <div class="o_it_callout" attrs="{'invisible': [('state', '!=', 'entregue')]}">
+                        <h3>Next step</h3>
+                        <p>Sign the receipt.</p>
+                    </div>
+                    <div class="o_it_callout" attrs="{'invisible': [('state', '!=', 'em_uso')]}">
+                        <h3>Next step</h3>
+                        <p>The resource is in use. The return gives the stock back.</p>
+                    </div>
+                    <div class="o_it_callout" attrs="{'invisible': [('state', '!=', 'devolucao')]}">
+                        <h3>Next step</h3>
+                        <p>Sign the return.</p>
+                    </div>
+                    <notebook>
+                        <page string="Next step" name="now">
+                            <field name="approval_ids" readonly="1" attrs="{'invisible': [('state', '!=', 'aguardando_aprovacao')]}">
+                                <tree>
+                                    <field name="kind"/>
+                                    <field name="state"/>
+                                    <field name="user_id"/>
+                                    <field name="date"/>
+                                    <field name="note"/>
+                                    <button name="action_fetch_reply" type="object" string="Fetch reply" icon="fa-download"
+                                            attrs="{'invisible': ['|', ('kind', '!=', 'third'), ('state', '!=', 'pending')]}"/>
+                                </tree>
+                            </field>
+                            <field name="signature_ids" readonly="1" attrs="{'invisible': [('state', 'not in', ('entregue', 'devolucao', 'em_uso', 'devolvido'))]}">
+                                <tree>
+                                    <field name="term_type"/>
+                                    <field name="signer_id"/>
+                                    <field name="state"/>
+                                    <field name="signed_on"/>
+                                </tree>
+                            </field>
+                            <field name="line_ids" attrs="{'invisible': [('state', 'in', ('aguardando_aprovacao', 'entregue', 'devolucao'))]}">
+                                <tree editable="bottom">
+                                    <field name="need_id" attrs="{'readonly': [('parent.state', '!=', 'solicitando')]}"/>
+                                    <field name="collaborator_id" attrs="{'readonly': [('parent.state', '!=', 'solicitando')]}"/>
+                                    <field name="quantity" attrs="{'readonly': [('parent.state', '!=', 'solicitando')]}"/>
+                                    <field name="item_id" attrs="{'readonly': [('parent.state', 'not in', ('alocacao', 'disponibilidade'))]}"/>
+                                    <field name="unit_ids" widget="many2many_tags" attrs="{'invisible': [('tracking', '!=', 'unit')], 'readonly': [('parent.state', 'not in', ('alocacao', 'disponibilidade'))]}" domain="[('item_id', '=', item_id), ('state', '=', 'available')]"/>
+                                    <field name="tracking" readonly="1"/>
+                                    <field name="availability" readonly="1"/>
+                                    <field name="fulfilled" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_it_resource_request_search" model="ir.ui.view">
+        <field name="name">it.resource.request.search</field>
+        <field name="model">it.resource.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="requested_by"/>
+                <field name="collaborator_id"/>
+                <field name="note"/>
+                <filter name="filter_requesting" string="Requesting" domain="[('state', '=', 'solicitando')]"/>
+                <filter name="filter_approval" string="Waiting for approval" domain="[('state', '=', 'aguardando_aprovacao')]"/>
+                <filter name="filter_progress" string="With IT" domain="[('state', 'in', ('aprovado', 'em_andamento', 'alocacao', 'disponibilidade'))]"/>
+                <filter name="filter_sign" string="Waiting for signature" domain="[('state', 'in', ('entregue', 'devolucao'))]"/>
+                <filter name="filter_use" string="In use" domain="[('state', '=', 'em_uso')]"/>
+                <filter name="filter_closed" string="Closed" domain="[('state', 'in', ('devolvido', 'cancelado', 'nao_aprovado'))]"/>
+                <separator/>
+                <filter name="filter_mine" string="My requests" domain="[('requested_by', '=', uid)]"/>
+                <filter name="filter_high" string="High priority" domain="[('priority', '=', '1')]"/>
+                <group expand="0" string="Group by">
+                    <filter name="group_state" string="Stage" context="{'group_by': 'state'}"/>
+                    <filter name="group_user" string="Requested by" context="{'group_by': 'requested_by'}"/>
+                    <filter name="group_collaborator" string="Collaborator" context="{'group_by': 'collaborator_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_it_resource_request" model="ir.actions.act_window">
+        <field name="name">Requests</field>
+        <field name="res_model">it.resource.request</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_group_state': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No resource request</p>
+            <p>The supervisor asks for a need. The approval chooses the path. IT chooses the item.</p>
+        </field>
+    </record>
+
+    <record id="action_it_resource_request_mine" model="ir.actions.act_window">
+        <field name="name">My requests</field>
+        <field name="res_model">it.resource.request</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('requested_by', '=', uid)]</field>
+    </record>
+
+    <record id="action_it_resource_request_draft" model="ir.actions.act_window">
+        <field name="name">Requesting</field>
+        <field name="res_model">it.resource.request</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('state', 'in', ('solicitando', 'solicitado'))]</field>
+    </record>
+
+    <record id="action_it_resource_request_open" model="ir.actions.act_window">
+        <field name="name">Waiting for approval</field>
+        <field name="res_model">it.resource.request</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('state', '=', 'aguardando_aprovacao')]</field>
+    </record>
+
+    <record id="action_it_resource_request_progress" model="ir.actions.act_window">
+        <field name="name">With IT</field>
+        <field name="res_model">it.resource.request</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('state', 'in', ('aprovado', 'em_andamento', 'alocacao', 'disponibilidade'))]</field>
+    </record>
+
+    <record id="action_it_resource_request_sign" model="ir.actions.act_window">
+        <field name="name">Waiting for signature</field>
+        <field name="res_model">it.resource.request</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('state', 'in', ('entregue', 'devolucao'))]</field>
+    </record>
+
+    <record id="action_it_resource_request_done" model="ir.actions.act_window">
+        <field name="name">In use</field>
+        <field name="res_model">it.resource.request</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('state', '=', 'em_uso')]</field>
+    </record>
+
+    <record id="action_it_resource_request_cancel" model="ir.actions.act_window">
+        <field name="name">Closed</field>
+        <field name="res_model">it.resource.request</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('state', 'in', ('devolvido', 'cancelado', 'nao_aprovado'))]</field>
+    </record>
+</odoo>

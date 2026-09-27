@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_email_template_tree" model="ir.ui.view">
+        <field name="name">email.template.tree</field>
+        <field name="model">email.template</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="active == False">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="account_id"/>
+                <field name="email_to"/>
+                <field name="subject"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_email_template_form" model="ir.ui.view">
+        <field name="name">email.template.form</field>
+        <field name="model">email.template</field>
+        <field name="arch" type="xml">
+            <form class="o_email_template_form">
+                <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="o_email_setup_callout">
+                        <h3>Reusable text for this screen and for other modules</h3>
+                        <p>
+                            Other modules send this template by its code.
+                            In HTML, {{{variable}}} receives the value from the list below
+                            or {{{object.field}}} from the record.
+                            {{key}} still works for modules that already send that way.
+                        </p>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Order notice"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Identification">
+                            <field name="code" placeholder="order_notice"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Sending">
+                            <field name="account_id"/>
+                            <field name="body_format"/>
+                            <field name="email_to" placeholder="{{{object.email}}} or name@company.com"/>
+                        </group>
+                    </group>
+                    <separator string="Variables"/>
+                    <field name="variable_ids">
+                        <tree editable="bottom">
+                            <field name="name" placeholder="order"/>
+                            <field name="description" placeholder="Order number"/>
+                        </tree>
+                    </field>
+                    <separator string="Subject"/>
+                    <field name="subject" nolabel="1" placeholder="Order {{{order}}}"/>
+                    <separator string="Text or HTML"/>
+                    <field name="body" nolabel="1" placeholder="Text, or HTML with {{{order}}}"/>
+                    <separator string="Preview"/>
+                    <div class="o_email_preview">
+                        <field name="preview_html" nolabel="1" readonly="1"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_email_template_search" model="ir.ui.view">
+        <field name="name">email.template.search</field>
+        <field name="model">email.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="account_id"/>
+                <filter name="filter_active" string="In Use" domain="[('active', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_email_template" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">email.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first template</p>
+            <p>
+                A template stores a subject and text to reuse.
+                Other modules call the template by its code.
+            </p>
+        </field>
+    </record>
+</odoo>

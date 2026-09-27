@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_it_resource_access_tree" model="ir.ui.view">
+        <field name="name">it.resource.access.tree</field>
+        <field name="model">it.resource.access</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="user_id"/>
+                <field name="login"/>
+                <field name="level"/>
+                <field name="tab_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_it_resource_access_search" model="ir.ui.view">
+        <field name="name">it.resource.access.search</field>
+        <field name="model">it.resource.access</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="user_id"/>
+                <field name="login"/>
+                <filter name="filter_own" string="Only their own requests" domain="[('level', '=', 'own')]"/>
+                <filter name="filter_directed" string="Directed to them" domain="[('level', '=', 'directed')]"/>
+                <filter name="filter_all" string="All" domain="[('level', '=', 'all')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_it_resource_access" model="ir.actions.act_window">
+        <field name="name">Access</field>
+        <field name="res_model">it.resource.access</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nobody has access to the module</p>
+            <p>Choose the person, what they see in the requests and which menu tabs they open.</p>
+        </field>
+    </record>
+</odoo>

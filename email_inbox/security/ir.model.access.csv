@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_email_account_user,email.account.user,model_email_account,group_email_user,1,0,0,0
+access_email_account_manager,email.account.manager,model_email_account,group_email_manager,1,1,1,1
+access_email_message_user,email.message.user,model_email_message,group_email_user,1,1,1,0
+access_email_message_manager,email.message.manager,model_email_message,group_email_manager,1,1,1,1
+access_email_uidl_manager,email.uidl.manager,model_email_uidl,group_email_manager,1,1,1,1
+access_email_template_variable_user,email.template.variable.user,model_email_template_variable,group_email_user,1,0,0,0
+access_email_template_variable_manager,email.template.variable.manager,model_email_template_variable,group_email_manager,1,1,1,1
+access_email_compose_user,email.compose.user,model_email_compose,group_email_user,1,1,1,1
+access_email_template_user,email.template.user,model_email_template,group_email_user,1,0,0,0
+access_email_template_manager,email.template.manager,model_email_template,group_email_manager,1,1,1,1

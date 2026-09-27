@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="it_resource_request assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/it_resource_request/static/src/scss/it_resource.scss"/>
+            <script type="text/javascript" src="/it_resource_request/static/src/js/signature.js"/>
+        </xpath>
+    </template>
+</odoo>

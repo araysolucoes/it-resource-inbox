@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="term_receipt_default" model="it.resource.term">
+        <field name="name">Receipt term</field>
+        <field name="term_type">receipt</field>
+        <field name="mode">text</field>
+        <field name="is_default" eval="True"/>
+        <field name="body">I, {{colaborador}}, declare that I received {{quantidade}} unit(s) of {{item}}, for the need {{necessidade}}, request {{pedido}}, on {{data}}.
+
+Requested by {{solicitante}}.</field>
+    </record>
+
+    <record id="term_return_default" model="it.resource.term">
+        <field name="name">Return term</field>
+        <field name="term_type">return</field>
+        <field name="mode">text</field>
+        <field name="is_default" eval="True"/>
+        <field name="body">I, {{colaborador}}, return {{quantidade}} unit(s) of {{item}}, for the need {{necessidade}}, request {{pedido}}, on {{data}}.</field>
+    </record>
+
+    <record id="ir_cron_third_approval" model="ir.cron">
+        <field name="name">IT: read third-party approval replies</field>
+        <field name="model_id" ref="model_it_resource_approval"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_read_replies()</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+    <function model="it.resource.request" name="_refresh_access_snapshot"/>
+</odoo>

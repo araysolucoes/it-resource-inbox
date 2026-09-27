@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_it_resource_term_tree" model="ir.ui.view">
+        <field name="name">it.resource.term.tree</field>
+        <field name="model">it.resource.term</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="active == False">
+                <field name="name"/>
+                <field name="term_type"/>
+                <field name="mode"/>
+                <field name="is_default"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_it_resource_term_form" model="ir.ui.view">
+        <field name="name">it.resource.term.form</field>
+        <field name="model">it.resource.term</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="o_it_callout">
+                        <h3>Term the person signs</h3>
+                        <p>Text and signature: you write the text and the collaborator draws the signature on screen.</p>
+                        <p>PDF: upload the file and mark the places in percentages. 0 and 0 is the top left corner. 50 and 50 is the center. The signature goes in the place marked as Signature.</p>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="E.g.: Equipment receipt term"/></h1>
+                    </div>
+                    <group>
+                        <group string="Usage">
+                            <field name="term_type"/>
+                            <field name="mode"/>
+                            <field name="is_default"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Text" attrs="{'invisible': [('mode', '!=', 'text')]}">
+                            <p class="text-muted">Placeholders: {{colaborador}} {{necessidade}} {{item}} {{quantidade}} {{data}} {{solicitante}} {{pedido}}</p>
+                            <field name="body" nolabel="1" placeholder="I, {{colaborador}}, received {{quantidade}} {{item}}."/>
+                        </page>
+                        <page string="PDF and places" attrs="{'invisible': [('mode', '!=', 'pdf')]}">
+                            <group>
+                                <field name="pdf_name" invisible="1"/>
+                                <field name="pdf_file" filename="pdf_name"/>
+                            </group>
+                            <field name="place_ids">
+                                <tree editable="bottom">
+                                    <field name="page"/>
+                                    <field name="role"/>
+                                    <field name="pos_x"/>
+                                    <field name="pos_y"/>
+                                    <field name="width"/>
+                                    <field name="height"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_it_resource_term" model="ir.actions.act_window">
+        <field name="name">Signature terms</field>
+        <field name="res_model">it.resource.term</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create the receipt term and the return term</p>
+            <p>Mark one of each type as the term used in requests.</p>
+        </field>
+    </record>
+
+    <record id="view_it_resource_signature_form" model="ir.ui.view">
+        <field name="name">it.resource.signature.form</field>
+        <field name="model">it.resource.signature</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_sign" type="object" string="Confirm signature" class="oe_highlight" icon="fa-pencil"
+                            attrs="{'invisible': [('state', '!=', 'pending')]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="o_it_callout">
+                        <p>Read the text. If there is a PDF, the listed places show where each piece of data goes. Draw the signature and confirm.</p>
+                    </div>
+                    <group>
+                        <field name="term_id" readonly="1"/>
+                        <field name="signer_id" readonly="1"/>
+                        <field name="signed_on" attrs="{'invisible': [('state', '!=', 'signed')]}"/>
+                    </group>
+                    <separator string="Term text"/>
+                    <field name="body_snapshot" nolabel="1" readonly="1"/>
+                    <separator string="Places marked on the PDF" attrs="{'invisible': [('place_snapshot', '=', False)]}"/>
+                    <field name="place_snapshot" nolabel="1" readonly="1" attrs="{'invisible': [('place_snapshot', '=', False)]}"/>
+                    <group attrs="{'invisible': [('pdf_file', '=', False)]}">
+                        <field name="pdf_name" invisible="1"/>
+                        <field name="pdf_file" filename="pdf_name" readonly="1"/>
+                    </group>
+                    <separator string="Signature"/>
+                    <field name="signature" widget="it_signature" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

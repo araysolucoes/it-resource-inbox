@@ -1,0 +1,189 @@
+// Cards, callouts and stage colors of the IT resource request screens.
+
+.o_it_callout {
+    background: #f7f4f8;
+    border: 1px solid #e4d4e6;
+    border-left: 4px solid #875A7B;
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+
+    h3 {
+        margin: 0 0 8px;
+        font-size: 15px;
+        color: #875A7B;
+    }
+
+    p {
+        margin-bottom: 8px;
+    }
+
+    p:last-child,
+    ol:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.o_it_steps {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.o_it_request_kanban .o_it_request_card,
+.o_it_item_kanban .o_it_item_card {
+    padding: 12px 14px;
+    border-left: 4px solid #875A7B;
+}
+
+.o_it_request_draft {
+    border-left-color: #8d8292;
+}
+
+.o_it_request_open {
+    border-left-color: #2f6f9f;
+}
+
+.o_it_request_done {
+    border-left-color: #1e7a45;
+}
+
+.o_it_request_cancel {
+    border-left-color: #8d8292;
+    opacity: 0.7;
+}
+
+.o_it_request_high {
+    box-shadow: inset 0 0 0 1px #e7c98a;
+}
+
+.o_it_request_top,
+.o_it_request_meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.o_it_request_who {
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+.o_it_request_meta,
+.o_it_request_note,
+.o_it_item_code {
+    margin-top: 6px;
+    color: #6c6570;
+    font-size: 12px;
+}
+
+.o_it_request_note {
+    max-height: 2.8em;
+    overflow: hidden;
+}
+
+.o_it_state_draft {
+    background: #eeeef0;
+    color: #5c5660;
+}
+
+.o_it_state_open {
+    background: #e7f2f8;
+    color: #1d5678;
+}
+
+.o_it_state_done {
+    background: #e5f6ec;
+    color: #1e7a45;
+}
+
+.o_it_state_cancel {
+    background: #fdecea;
+    color: #a12622;
+}
+
+.o_it_item_short {
+    border-left-color: #a12622;
+}
+
+.o_it_item_qty {
+    font-size: 18px;
+    font-weight: 600;
+    color: #875A7B;
+}
+
+.o_it_item_pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.o_it_pill,
+.o_it_pill_track {
+    background: #f3eaf4;
+    color: #875A7B;
+}
+
+.o_it_pill_track {
+    background: #f8f6f1;
+    color: #6b5b3e;
+}
+
+.o_it_sign_pad {
+    display: block;
+    width: 100%;
+    max-width: 520px;
+    height: 160px;
+    border: 1px dashed #875A7B;
+    border-radius: 6px;
+    background: #fff;
+    touch-action: none;
+}
+
+.o_it_sign_clear {
+    margin-top: 8px;
+}
+
+.o_it_request_aguardando_aprovacao,
+.o_it_request_devolucao {
+    border-left-color: #8a5a12;
+}
+
+.o_it_request_aprovado,
+.o_it_request_em_uso {
+    border-left-color: #1e7a45;
+}
+
+.o_it_request_alocacao,
+.o_it_request_disponibilidade {
+    border-left-color: #2f6f9f;
+}
+
+.o_it_request_entregue {
+    border-left-color: #875A7B;
+}
+
+.o_it_request_nao_aprovado {
+    border-left-color: #a12622;
+}
+
+.o_it_state_aguardando_aprovacao,
+.o_it_state_devolucao,
+.o_it_state_entregue {
+    background: #fff4e5;
+    color: #8a5a12;
+}
+
+.o_it_state_aprovado,
+.o_it_state_em_uso,
+.o_it_state_devolvido {
+    background: #e5f6ec;
+    color: #1e7a45;
+}
+
+.o_it_state_nao_aprovado,
+.o_it_state_cancelado {
+    background: #fdecea;
+    color: #a12622;
+}

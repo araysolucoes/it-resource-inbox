@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_email_message_kanban" model="ir.ui.view">
+        <field name="name">email.message.kanban</field>
+        <field name="model">email.message</field>
+        <field name="arch" type="xml">
+            <kanban class="o_email_inbox_kanban" create="false" default_order="date desc">
+                <field name="subject"/>
+                <field name="email_from"/>
+                <field name="email_to"/>
+                <field name="date"/>
+                <field name="state"/>
+                <field name="direction"/>
+                <field name="account_id"/>
+                <field name="preview"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click o_email_card o_email_card_#{record.state.raw_value}">
+                            <div class="o_email_card_top">
+                                <strong class="o_email_card_who">
+                                    <t t-if="record.direction.raw_value == 'in'">
+                                        <field name="email_from"/>
+                                    </t>
+                                    <t t-else="">
+                                        To <field name="email_to"/>
+                                    </t>
+                                </strong>
+                                <span class="o_email_card_date">
+                                    <field name="date"/>
+                                </span>
+                            </div>
+                            <div class="o_email_card_subject">
+                                <field name="subject"/>
+                            </div>
+                            <div class="o_email_card_preview">
+                                <field name="preview"/>
+                            </div>
+                            <div class="o_email_card_foot">
+                                <span class="badge badge-pill o_email_pill_account">
+                                    <field name="account_id"/>
+                                </span>
+                                <span t-attf-class="badge badge-pill o_email_state_#{record.state.raw_value}">
+                                    <field name="state"/>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_email_message_tree" model="ir.ui.view">
+        <field name="name">email.message.tree</field>
+        <field name="model">email.message</field>
+        <field name="arch" type="xml">
+            <tree create="false" decoration-danger="state == 'error'" decoration-muted="state == 'draft'" decoration-success="state == 'sent'">
+                <field name="date"/>
+                <field name="account_id"/>
+                <field name="direction"/>
+                <field name="email_from"/>
+                <field name="email_to"/>
+                <field name="subject"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_email_message_form" model="ir.ui.view">
+        <field name="name">email.message.form</field>
+        <field name="model">email.message</field>
+        <field name="arch" type="xml">
+            <form class="o_email_message_form" create="false" edit="false">
+                <field name="direction" invisible="1"/>
+                <field name="res_model" invisible="1"/>
+                <header>
+                    <button name="action_send_draft" type="object" string="Send Now" class="oe_highlight" icon="fa-paper-plane"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_reply" type="object" string="Reply" class="oe_highlight" icon="fa-reply"
+                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <button name="action_retry" type="object" string="Try Again" icon="fa-refresh"
+                            attrs="{'invisible': ['|', ('state', '!=', 'error'), ('direction', '!=', 'out')]}"/>
+                    <button name="action_open_origin" type="object" string="Open Origin Record" icon="fa-external-link"
+                            attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', 0)]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="received,sent,error"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-danger o_email_error_banner" role="alert" attrs="{'invisible': [('error_message', '=', False)]}">
+                        <strong>This message was not sent.</strong>
+                        <div><field name="error_message" nolabel="1" readonly="1"/></div>
+                    </div>
+                    <div class="o_email_read">
+                        <h1 class="o_email_subject">
+                            <field name="subject" readonly="1" placeholder="No subject"/>
+                        </h1>
+                        <div class="o_email_meta">
+                            <div class="o_email_meta_row" attrs="{'invisible': [('email_from', '=', False)]}">
+                                <span>From</span>
+                                <field name="email_from" readonly="1"/>
+                            </div>
+                            <div class="o_email_meta_row">
+                                <span>To</span>
+                                <field name="email_to" readonly="1"/>
+                            </div>
+                            <div class="o_email_meta_row" attrs="{'invisible': [('email_cc', '=', False)]}">
+                                <span>Cc</span>
+                                <field name="email_cc" readonly="1"/>
+                            </div>
+                            <div class="o_email_meta_row">
+                                <span>When</span>
+                                <field name="date" readonly="1"/>
+                            </div>
+                            <div class="o_email_meta_row" attrs="{'invisible': [('parent_id', '=', False)]}">
+                                <span>In reply to</span>
+                                <field name="parent_id" readonly="1"/>
+                            </div>
+                            <div class="o_email_meta_row">
+                                <span>Account</span>
+                                <field name="account_id" readonly="1"/>
+                            </div>
+                            <div class="o_email_meta_row" attrs="{'invisible': [('template_id', '=', False)]}">
+                                <span>Template</span>
+                                <field name="template_id" readonly="1"/>
+                            </div>
+                        </div>
+                        <field name="body_format" invisible="1"/>
+                        <div class="o_email_body" attrs="{'invisible': [('body_format', '=', 'html')]}">
+                            <field name="reply_text" readonly="1" nolabel="1"/>
+                        </div>
+                        <div class="o_email_quote" attrs="{'invisible': ['|', ('quote_text', '=', False), ('body_format', '=', 'html')]}">
+                            <field name="quote_text" readonly="1" nolabel="1"/>
+                        </div>
+                        <div class="o_email_body" attrs="{'invisible': [('body_format', '!=', 'html')]}">
+                            <field name="reading_html" readonly="1" nolabel="1"/>
+                        </div>
+                        <div class="o_email_files" attrs="{'invisible': [('attachment_ids', '=', [])]}">
+                            <div class="o_email_files_title">Attachments</div>
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </div>
+                    </div>
+                    <notebook>
+                        <page string="Follow-ups" name="thread">
+                            <field name="child_ids" readonly="1">
+                                <tree decoration-danger="state == 'error'" decoration-success="state == 'sent'">
+                                    <field name="date"/>
+                                    <field name="direction"/>
+                                    <field name="email_from"/>
+                                    <field name="email_to"/>
+                                    <field name="subject"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Origin in Another Module" name="origin" attrs="{'invisible': [('res_model', '=', False)]}">
+                            <div class="o_email_setup_callout">
+                                <p>
+                                    These two fields are filled in automatically when another module
+                                    requests the sending. They link the message to the record that
+                                    originated it, so the reply comes back to the same place.
+                                </p>
+                            </div>
+                            <group>
+                                <field name="res_model"/>
+                                <field name="res_id"/>
+                            </group>
+                        </page>
+                        <page string="Technical Details" name="technical" groups="email_inbox.group_email_manager">
+                            <group>
+                                <field name="message_id"/>
+                                <field name="in_reply_to"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_email_message_search" model="ir.ui.view">
+        <field name="name">email.message.search</field>
+        <field name="model">email.message</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="subject" string="Subject"/>
+                <field name="email_from" string="Sender"/>
+                <field name="email_to" string="Recipient"/>
+                <field name="account_id"/>
+                <filter name="filter_in" string="Received" domain="[('direction', '=', 'in')]"/>
+                <filter name="filter_out" string="Sent" domain="[('direction', '=', 'out')]"/>
+                <separator/>
+                <filter name="filter_error" string="Failed" domain="[('state', '=', 'error')]"/>
+                <filter name="filter_draft" string="Drafts" domain="[('state', '=', 'draft')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_account" string="Account" context="{'group_by': 'account_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_direction" string="Direction" context="{'group_by': 'direction'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_email_message_inbox" model="ir.actions.act_window">
+        <field name="name">Inbox</field>
+        <field name="res_model">email.message</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('direction', '=', 'in'), ('in_inbox', '=', True)]</field>
+        <field name="context">{'search_default_filter_in': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No replies received</p>
+            <p>
+                Replies to the emails sent by the system arrive here.
+                Everything else goes to Others.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_email_message_other" model="ir.actions.act_window">
+        <field name="name">Others</field>
+        <field name="res_model">email.message</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('direction', '=', 'in'), ('in_inbox', '=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nothing besides replies</p>
+            <p>Promotions and notices that do not reply to an email sent by the system are listed here.</p>
+        </field>
+    </record>
+
+    <record id="action_email_message_sent" model="ir.actions.act_window">
+        <field name="name">Sent</field>
+        <field name="res_model">email.message</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('direction', '=', 'out')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No messages sent</p>
+            <p>
+                Everything sent through Send Message, Reply, Forward or another module
+                is listed here, with the status Sent or Failed.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_email_message_failed" model="ir.actions.act_window">
+        <field name="name">Failed</field>
+        <field name="res_model">email.message</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('state', '=', 'error')]</field>
+        <field name="context">{'search_default_filter_error': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No failed messages</p>
+            <p>When the outgoing server refuses a message, it shows up here so it can be retried.</p>
+        </field>
+    </record>
+
+    <record id="action_email_message_draft" model="ir.actions.act_window">
+        <field name="name">Drafts</field>
+        <field name="res_model">email.message</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('state', '=', 'draft')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No drafts</p>
+            <p>Outgoing messages that have not gone through the outgoing server yet.</p>
+        </field>
+    </record>
+
+    <record id="action_email_message_all" model="ir.actions.act_window">
+        <field name="name">All Messages</field>
+        <field name="res_model">email.message</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No messages</p>
+            <p>Incoming, outgoing, drafts and failures, from every account.</p>
+        </field>
+    </record>
+</odoo>

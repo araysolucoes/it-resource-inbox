@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="ItResourceSignature">
+        <div class="o_it_sign">
+            <canvas class="o_it_sign_pad" width="520" height="160"/>
+            <button type="button" class="btn btn-secondary o_it_sign_clear">Clear signature</button>
+        </div>
+    </t>
+</templates>

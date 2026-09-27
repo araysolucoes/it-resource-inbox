@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tab_request" model="it.resource.access.tab">
+        <field name="name">Requests</field>
+        <field name="code">request</field>
+        <field name="sequence">10</field>
+        <field name="group_id" ref="group_it_tab_request"/>
+    </record>
+    <record id="tab_catalog" model="it.resource.access.tab">
+        <field name="name">Catalog</field>
+        <field name="code">catalog</field>
+        <field name="sequence">20</field>
+        <field name="group_id" ref="group_it_tab_catalog"/>
+    </record>
+    <record id="tab_use" model="it.resource.access.tab">
+        <field name="name">In use</field>
+        <field name="code">use</field>
+        <field name="sequence">30</field>
+        <field name="group_id" ref="group_it_tab_use"/>
+    </record>
+    <record id="tab_config" model="it.resource.access.tab">
+        <field name="name">Settings</field>
+        <field name="code">config</field>
+        <field name="sequence">40</field>
+        <field name="group_id" ref="group_it_tab_config"/>
+    </record>
+    <function model="it.resource.access" name="_sync_from_groups"/>
+</odoo>

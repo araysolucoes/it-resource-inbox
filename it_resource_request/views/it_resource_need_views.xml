@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_it_resource_need_category_tree" model="ir.ui.view">
+        <field name="name">it.resource.need.category.tree</field>
+        <field name="model">it.resource.need.category</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_it_resource_need_category" model="ir.actions.act_window">
+        <field name="name">Need categories</field>
+        <field name="res_model">it.resource.need.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_it_resource_need_tree" model="ir.ui.view">
+        <field name="name">it.resource.need.tree</field>
+        <field name="model">it.resource.need</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="active == False">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="approve_ti"/>
+                <field name="approve_third"/>
+                <field name="approve_board"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_it_resource_need_form" model="ir.ui.view">
+        <field name="name">it.resource.need.form</field>
+        <field name="model">it.resource.need</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="o_it_callout">
+                        <h3>The need is not the product</h3>
+                        <p>The requester describes what the collaborator needs. The approvers decide the item, the brand and the specification. The checkboxes below define which approvals this request will require.</p>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="E.g.: VPN access, Notebook for a new hire"/></h1>
+                    </div>
+                    <group>
+                        <group string="Identification">
+                            <field name="category_id"/>
+                            <field name="code" placeholder="vpn_access"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Who must approve">
+                            <field name="approve_ti"/>
+                            <field name="approve_third"/>
+                            <field name="approve_board"/>
+                        </group>
+                    </group>
+                    <separator string="Description"/>
+                    <field name="description" nolabel="1" placeholder="What the person can do with it and what is left out."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_it_resource_need_search" model="ir.ui.view">
+        <field name="name">it.resource.need.search</field>
+        <field name="model">it.resource.need</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="code"/>
+                <filter name="filter_active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group by">
+                    <filter name="group_category" string="Category" context="{'group_by': 'category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_it_resource_need" model="ir.actions.act_window">
+        <field name="name">Needs</field>
+        <field name="res_model">it.resource.need</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create the first need</p>
+            <p>Access, license or equipment, in the words of the requester. The right item is chosen during approval and allocation.</p>
+        </field>
+    </record>
+</odoo>

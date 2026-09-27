@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_it_resource_approval_decide" model="ir.ui.view">
+        <field name="name">it.resource.approval.decide.form</field>
+        <field name="model">it.resource.approval.decide</field>
+        <field name="arch" type="xml">
+            <form class="o_it_decide">
+                <div class="o_it_callout">
+                    <h3>Decision for this step</h3>
+                    <p>Approving releases the request to the next approval, or to IT if this is the last one. Refusing closes the request as Not approved. The note is visible on the request.</p>
+                </div>
+                <group>
+                    <field name="approval_id"/>
+                    <field name="decision"/>
+                    <field name="note" placeholder="E.g.: I approve the 16 GB notebook, not the 8 GB one."/>
+                </group>
+                <footer>
+                    <button name="action_apply" type="object" string="Confirm decision" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
